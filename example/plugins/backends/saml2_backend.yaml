@@ -1,14 +1,14 @@
 module: satosa.backends.saml2.SAMLBackend
 name: Saml2
 config:
-  #idp_blacklist_file: /path/to/blacklist.json
+  idp_blacklist_file: !ENV SATOSA_IDP_BLACKLIST_FILE
 
   # make metadata downloadable from entityid url
   entityid_endpoint: true
 
   sp_config:
-    key_file: ./pki/backend.key
-    cert_file: ./pki/backend.cert
+    key_file: !ENV SATOSA_SAML2_BACKEND_KEY_FILE  #./pki/backend.key
+    cert_file: !ENV SATOSA_SAML2_BACKEND_CRT_FILE #./pki/backend.cert
     encryption_keypairs:
     - {'key_file': ./pki/backend.key, 'cert_file': ./pki/backend.cert}
 

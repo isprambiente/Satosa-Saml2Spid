@@ -99,18 +99,18 @@ config:
                               'fiscalNumber',
                               'email']
 
-        #optional_attributes: ['gender',
-         #                     'companyName',
-          #                    'registeredOffice',
-       #                       'ivaCode',
-        #                      'idCard',
-         #                     'digitalAddress',
-          #                    'placeOfBirth',
-           #                   'countyOfBirth',
-            #                  'dateOfBirth',
-             #                 'address',
-       #                       'mobilePhone',
-        #                      'expirationDate']
+        # optional_attributes: ['gender',
+        #                       'companyName',
+        #                       'registeredOffice',
+        #                       'ivaCode',
+        #                       'idCard',
+        #                       'digitalAddress',
+        #                       'placeOfBirth',
+        #                       'countyOfBirth',
+        #                       'dateOfBirth',
+        #                       'address',
+        #                       'mobilePhone',
+        #                       'expirationDate']
 
         endpoints:
           assertion_consumer_service:

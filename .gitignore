@@ -1,4 +1,5 @@
 SATOSA/
+*spid_cert/*
 */__pyc__/*
 *.pyc
 *pyFF_example/info.log

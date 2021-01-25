@@ -93,8 +93,11 @@ class SpidSAMLBackend(SAMLBackend):
             with open(self.idp_blacklist_file) as blacklist_file:
                 blacklist_array = json.load(blacklist_file)['blacklist']
                 if entity_id in blacklist_array:
-                    logger.debug("IdP with EntityID {} is blacklisted".format(entity_id))
-                    raise SATOSAAuthenticationError(context.state, "Selected IdP is blacklisted for this backend")
+                    logger.debug(f"IdP with EntityID {entity_id} is blacklisted")
+                    raise SATOSAAuthenticationError(
+                        context.state, 
+                        "Selected IdP is blacklisted for this backend"
+                    )
 
 
     def authn_request(self, context, entity_id):
@@ -128,29 +131,24 @@ class SpidSAMLBackend(SAMLBackend):
         try:
             binding = saml2.BINDING_HTTP_POST
             destination = context.request['entityID']
-            # SPID CUSTOMIZATION
-            #client = saml2.client.Saml2Client(conf)
             client = self.sp
 
-            logger.debug("binding: %s, destination: %s" % (binding, destination))
+            logger.debug(f"binding: {binding}, destination: {destination}")
 
             # acs_endp, response_binding = self.sp.config.getattr("endpoints", "sp")["assertion_consumer_service"][0]
             # req_id, req = self.sp.create_authn_request(
                 # destination, binding=response_binding, **kwargs)
 
-            logger.debug('Redirecting user to the IdP via %s binding.', binding)
+            logger.debug(f'Redirecting user to the IdP via {binding} binding.')
             # use the html provided by pysaml2 if no template was specified or it didn't exist
 
-
             # SPID want the fqdn of the IDP as entityID, not the SSO endpoint
-            # 'http://idpspid.testunical.it:8088'
             # dovrebbe essere destination ma nel caso di spid-testenv2 è entityid...
             # binding, destination = self.sp.pick_binding("single_sign_on_service", None, "idpsso", entity_id=entity_id)
             # location = client.sso_location(destination, binding)
             location = client.sso_location(entity_id, binding)
             location_fixed = entity_id
             # ...hope to see the SSO endpoint soon in spid-testenv2
-            # returns 'http://idpspid.testunical.it:8088/sso'
             # fixed: https://github.com/italia/spid-testenv2/commit/6041b986ec87ab8515dd0d43fed3619ab4eebbe9
 
             # verificare qui
@@ -162,7 +160,7 @@ class SpidSAMLBackend(SAMLBackend):
             # spid-testenv2 preleva l'attribute consumer service dalla authnRequest (anche se questo sta già nei metadati...)
             authn_req.attribute_consuming_service_index = "0"
 
-            # import pdb; pdb.set_trace()
+            # breakpoint()
             issuer = saml2.saml.Issuer()
             issuer.name_qualifier = client.config.entityid
             issuer.text = client.config.entityid
@@ -217,6 +215,7 @@ class SpidSAMLBackend(SAMLBackend):
         except Exception as exc:
             logger.debug("Failed to construct the AuthnRequest for state")
             raise SATOSAAuthenticationError(context.state, "Failed to construct the AuthnRequest") from exc
+
 
     def authn_response(self, context, binding):
         """
